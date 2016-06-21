@@ -116,11 +116,13 @@ public class PushScheduler implements ServletContextAware {
             }
         }
 
-        log += String.format("%d keys(%s)", cnt, keys);
-        long endTime = System.currentTimeMillis();
-        _logger.info("[{}] work end, {}ms | {}", new Object[] {
-                startTime, endTime - startTime, log
-        });
+        if (cnt > 0) {
+            log += String.format("%d keys(%s)", cnt, keys);
+            long endTime = System.currentTimeMillis();
+            _logger.info("[{}] work end, {}ms | {}", new Object[] {
+                    startTime, endTime - startTime, log
+            });
+        }
     }
 
     private void workThread(final long startTime, final String sendKey) throws Exception {
