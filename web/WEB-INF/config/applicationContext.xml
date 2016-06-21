@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+
+    <!-- JSR-303 support will be detected on classpath and enabled automatically -->
+    <mvc:annotation-driven />
+
+
+
+    <!-- resources mapping -->
+    <mvc:resources
+        mapping="/resources/**"
+        location="/resources/" />
+    <mvc:resources
+        mapping="/views/**"
+        location="/views/" />
+
+
+
+    <!-- ViewResolver -->
+    <bean
+        id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property
+            name="viewClass"
+            value="org.springframework.web.servlet.view.JstlView" />
+        <property
+            name="prefix"
+            value="/" />
+        <property
+            name="suffix"
+            value=".jsp" />
+    </bean>
+
+
+
+    <!-- TODO gue/2016. 6. 9. : 사용성 검토후 삭제 필요 -->
+    <task:annotation-driven executor="myExecutor" />
+    <task:executor
+        id="myExecutor"
+        pool-size="200" />
+
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!-- <value>classpath:jdbc.properties</value> -->
+                <!-- <value>classpath:pns.properties</value> -->
+                <value>/WEB-INF/properties/jdbc.properties</value>
+                <value>/WEB-INF/properties/push.properties</value>
+                <value>/WEB-INF/properties/path.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!-- datasource declare -->
+    <!-- Apache Commons DBCP DataSource -->
+    <bean
+        id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"
+        p:driverClassName="${jdbc.driver}"
+        p:url="${jdbc.url}"
+        p:username="${jdbc.username}"
+        p:password="${jdbc.password}"
+        p:initialSize="5"
+        p:maxActive="20"
+        p:maxIdle="10"
+        p:maxWait="60000"
+        p:poolPreparedStatements="true"
+        p:validationQuery="select 0 from dual"
+        p:testOnBorrow="true"
+        p:logAbandoned="false"
+        p:removeAbandoned="false"
+        p:removeAbandonedTimeout="50000" />
+    <!-- transactin manager declare -->
+    <bean
+        id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+        p:dataSource-ref="dataSource" />
+    <!-- declarative transaction use -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <!-- declarative sqlMapClient -->
+    <bean
+        id="sqlMapClient"
+        class="org.springframework.orm.ibatis.SqlMapClientFactoryBean"
+        p:dataSource-ref="dataSource"
+        p:configLocation="/WEB-INF/config/sqlMapConfig.xml" />
+        <!-- p:configLocation="classpath:sqlMapConfig.xml" /> -->
+    <!-- declarative sqlMapClientTemplate -->
+    <bean
+        id="sqlMapClientTemplate"
+        class="org.springframework.orm.ibatis.SqlMapClientTemplate"
+        p:sqlMapClient-ref="sqlMapClient" />
+
+
+
+    <!-- common bean -->
+    <bean
+        id="gson"
+        class="com.google.gson.Gson" />
+    <bean
+        id="jacksonMessageConverter"
+        class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+
+
+
+    <!-- <import resource=".xml" /> -->
+
+</beans>

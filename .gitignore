@@ -1,0 +1,39 @@
+# default
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/build
+/captures
+
+# svn root
+.svn
+
+# Gradle
+.gradle
+build
+
+# IntelliJ IDEA
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+# Maven
+target
+release.properties
+pom.xml.*
+
+# Eclipse
+#.classpath
+#.project
+#.settings/
+.metadata/
+classes/
+web/WEB-INF/properties/push.properties
+web/WEB-INF/properties/jdbc.properties
+
+# OS X
+.DS_Store
+
+# Personal Files

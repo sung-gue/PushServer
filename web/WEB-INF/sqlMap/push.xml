@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="push">
+
+
+    <parameterMap id="testPrcMap" class="map">
+        <parameter property="I_STR_DATA"            javaType="java.lang.String"      jdbcType="VARCHAR"     mode="IN" />
+        <parameter property="I_STR_REG_IP"          javaType="java.lang.String"      jdbcType="VARCHAR"     mode="IN" />
+        <parameter property="I_STR_TYPE"            javaType="java.lang.String"      jdbcType="VARCHAR"     mode="IN" />
+        <parameter property="O_INT_RES_CODE"        javaType="java.lang.Integer"     jdbcType="INT"         mode="OUT" />
+        <parameter property="O_STR_RES_MSG"         javaType="java.lang.String"      jdbcType="VARCHAR"     mode="OUT" />
+    </parameterMap>
+    <procedure id="testPrc" parameterMap="testPrcMap"  resultClass="java.util.HashMap" >
+        { CALL TEST(?, ?, ?, ?, ?)}
+    </procedure>
+
+
+    <parameterMap id="readStandByMessageMap" class="map">
+        <parameter property="I_INT_PAGE_COUNT"      javaType="java.lang.Integer"     jdbcType="INT"         mode="IN" />
+        <parameter property="O_STR_SEND_KEY"        javaType="java.lang.String"      jdbcType="TEXT"        mode="OUT" />
+        <parameter property="O_INT_RES_CODE"        javaType="java.lang.Integer"     jdbcType="INT"         mode="OUT" />
+        <parameter property="O_STR_RES_MSG"         javaType="java.lang.String"      jdbcType="TEXT"        mode="OUT" />
+    </parameterMap>
+    <procedure id="readStandByMessage" parameterMap="readStandByMessageMap" resultClass="java.util.HashMap">
+        { CALL GCM_PREPARE_TX_PRC(?, ?, ?, ?)}
+    </procedure>
+
+
+    <statement id="readPrepareMessage" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+        SELECT *
+        FROM GCM_STANDBY
+        WHERE SEND_KEY = #SEND_KEY#
+    </statement>
+
+
+    <parameterMap id="processSendMessageMap" class="map">
+        <parameter property="I_INT_SEQ_NO"                  javaType="java.lang.Long"       jdbcType="INT"          mode="IN" />
+        <parameter property="I_STR_RES_IP"                  javaType="java.lang.String"     jdbcType="VARCHAR"      mode="IN" />
+        <parameter property="I_STR_RES_CODE"                javaType="java.lang.String"     jdbcType="VARCHAR"      mode="IN" />
+        <parameter property="I_STR_RES_MSG"                 javaType="java.lang.String"     jdbcType="TEST"         mode="IN" />
+        <parameter property="I_STR_RES_BODY"                javaType="java.lang.String"     jdbcType="TEXT"         mode="IN" />
+        <parameter property="I_STR_RES_MULTICAST_ID"        javaType="java.lang.String"     jdbcType="VARCHAR"      mode="IN" />
+        <parameter property="I_INT_RES_SUCCESS"             javaType="java.lang.Integer"    jdbcType="INT"          mode="IN" />
+        <parameter property="I_INT_RES_FAILURE"             javaType="java.lang.Integer"    jdbcType="INT"          mode="IN" />
+        <parameter property="I_STR_RES_CANONICAL_IDS"       javaType="java.lang.String"     jdbcType="TEXT"         mode="IN" />
+        <parameter property="I_STR_RES_RESULTS"             javaType="java.lang.String"     jdbcType="TEXT"         mode="IN" />
+        <parameter property="I_STR_RES_MESSAGE_ID"          javaType="java.lang.String"     jdbcType="VARCHAR"      mode="IN" />
+        <parameter property="I_STR_RES_ERROR"               javaType="java.lang.String"     jdbcType="VARCHAR"      mode="IN" />
+        <parameter property="O_INT_RES_CODE"                javaType="java.lang.Integer"    jdbcType="INT"          mode="OUT" />
+        <parameter property="O_STR_RES_MSG"                 javaType="java.lang.String"     jdbcType="TEXT"         mode="OUT" />
+    </parameterMap>
+    <procedure id="processSendMessage" parameterMap="processSendMessageMap" resultClass="java.util.HashMap">
+        { CALL GCM_PROCESS_SEND_MSG_TX_PRC(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}
+    </procedure>
+    
+    
+    
+    <!-- <isNotEmpty property="start">
+    LIMIT $start$ , $end$
+    </isNotEmpty> -->
+
+</sqlMap>

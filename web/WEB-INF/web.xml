@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    id="WebApp_ID"
+    version="3.0">
+
+    <display-name>breakout-push</display-name>
+
+
+
+    <welcome-file-list>
+        <welcome-file></welcome-file>
+    </welcome-file-list>
+
+
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+
+
+
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>breakout-push.root</param-value>
+    </context-param> 
+
+
+
+    <!-- 웹 어플리케이션이 시작되는 시점에 ApplicationContext을 로딩하며, 로딩된 빈정보는 모든 WebApplicationContext들이 참조할 수 있다. -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/config/applicationContext.xml
+        </param-value>
+    </context-param>
+
+
+
+    <!-- This listener should be registered after Log4jConfigListener in web.xml, if the latter is used. -->
+    <!-- log4j listener를 먼저설정 후 context파일 설정 작성 -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/properties/log4j.properties
+        </param-value>
+    </context-param>
+
+
+
+    <!-- encoding filter : utf-8 -->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <!-- <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param> -->
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
+    <!-- DispathcherSerlvet setting -->
+    <servlet>
+        <servlet-name>breakout-push</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/config/breakout-push-service.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>breakout-push</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+
+
+    <!-- <filter-mapping> 요소에서의 'springSecurityFilterChain'은 'org.springframework.web.filter.DelegatingFilterProxy'에 붙인 필터 이름이다. 
+    DelegatingFilterProxy 클래스는 스프링이 제공하는 필터이고, 실제 처리를 필터 이름에 일치하는 이름의 Bean에 위임한다. 
+    스프링 시큐리티는 'springSecurityFilterChain'이라는 이름으로 스프링에 Bean을 등록하기 때문에 이렇게 필터를 정의하면 스프링 시큐리티 기능이 유효해 진다. 
+    또한 애플리케이션의 모든 URL에 대해 이 필터 체인을 유효하게 하고, 스프링 시큐리티를 작동시킨다. -->
+    <!-- <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> -->
+
+
+
+    <!-- 이중 로그인을 막기 위한 리스너 클래스이다.-->
+    <!-- <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener> -->
+
+
+
+    <!-- error page setting -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/views/error/warn_404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/views/error/warn_500.jsp</location>
+    </error-page>
+</web-app>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+
+    <!-- JSR-303 support will be detected on classpath and enabled automatically -->
+    <mvc:annotation-driven />
+
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!-- <value>classpath:jdbc.properties</value> -->
+                <!-- <value>classpath:pns.properties</value> -->
+                <value>/WEB-INF/properties/jdbc.properties</value>
+                <value>/WEB-INF/properties/push.properties</value>
+                <value>/WEB-INF/properties/path.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <task:scheduler
+        id="jobScheduler"
+        pool-size="10" />
+    <task:scheduled-tasks scheduler="jobScheduler">
+        <task:scheduled
+            ref="pushScheduler"
+            method="work"
+            cron="0/10 * * * * *" />
+    </task:scheduled-tasks>
+
+
+
+    <import resource="controllerContext.xml" />
+
+</beans>
