@@ -124,7 +124,8 @@ public class PushScheduler implements ServletContextAware {
             });
         }
     }
-
+    
+    //@Async
     private void workThread(final long startTime, final String sendKey) throws Exception {
         new Thread(new Runnable() {
             @Override

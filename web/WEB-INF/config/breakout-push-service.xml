@@ -39,6 +39,7 @@
 
 
 
+    <!-- <task:annotation-driven scheduler="jobScheduler"/> -->
     <task:scheduler
         id="jobScheduler"
         pool-size="10" />
@@ -46,7 +47,7 @@
         <task:scheduled
             ref="pushScheduler"
             method="work"
-            cron="0/10 * * * * *" />
+            cron="0/1 * * * * *" />
     </task:scheduled-tasks>
 
 
